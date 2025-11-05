@@ -17,7 +17,6 @@ import java.util.ArrayList;
  * 6. Atualizar Dados do Animal
  * 7. Remover Animal
  * 8. Sair
- *
  * Demonstra: Herança, Polimorfismo, ArrayList, JOptionPane, Métodos
  * @version 1.0
  */
