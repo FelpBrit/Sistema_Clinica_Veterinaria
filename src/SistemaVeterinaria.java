@@ -17,7 +17,10 @@ import java.util.ArrayList;
  * 6. Atualizar Dados do Animal
  * 7. Remover Animal
  * 8. Sair
+ *
  * Demonstra: Herança, Polimorfismo, ArrayList, JOptionPane, Métodos
+ *
+ * @author Seu Nome
  * @version 1.0
  */
 public class SistemaVeterinaria {
@@ -157,9 +160,9 @@ public class SistemaVeterinaria {
 
             String especie = "Canina"; // Espécie padrão para cachorros
 
-            String idadeStr = solicitarTexto("Digite a idade (em anos):", "Cadastrar Cachorro");
-            if (idadeStr == null) return;
-            int idade = Integer.parseInt(idadeStr);
+            // Solicita idade em anos e meses
+            double idade = solicitarIdade("Cadastrar Cachorro");
+            if (idade == -1) return; // Usuário cancelou
 
             String nomeDono = solicitarTexto("Digite o nome do dono:", "Cadastrar Cachorro");
             if (nomeDono == null) return;
@@ -232,9 +235,9 @@ public class SistemaVeterinaria {
 
             String especie = "Felina"; // Espécie padrão para gatos
 
-            String idadeStr = solicitarTexto("Digite a idade (em anos):", "Cadastrar Gato");
-            if (idadeStr == null) return;
-            int idade = Integer.parseInt(idadeStr);
+            // Solicita idade em anos e meses
+            double idade = solicitarIdade("Cadastrar Gato");
+            if (idade == -1) return; // Usuário cancelou
 
             String nomeDono = solicitarTexto("Digite o nome do dono:", "Cadastrar Gato");
             if (nomeDono == null) return;
@@ -321,9 +324,9 @@ public class SistemaVeterinaria {
                     "Cadastrar Outro Animal");
             if (especie == null) return;
 
-            String idadeStr = solicitarTexto("Digite a idade (em anos):", "Cadastrar Outro Animal");
-            if (idadeStr == null) return;
-            int idade = Integer.parseInt(idadeStr);
+            // Solicita idade em anos e meses
+            double idade = solicitarIdade("Cadastrar Outro Animal");
+            if (idade == -1) return; // Usuário cancelou
 
             String nomeDono = solicitarTexto("Digite o nome do dono:", "Cadastrar Outro Animal");
             if (nomeDono == null) return;
@@ -550,9 +553,8 @@ public class SistemaVeterinaria {
                     break;
 
                 case "Idade":
-                    String novaIdadeStr = solicitarTexto("Digite a nova idade:", "Atualizar Idade");
-                    if (novaIdadeStr != null) {
-                        int novaIdade = Integer.parseInt(novaIdadeStr);
+                    double novaIdade = solicitarIdade("Atualizar Idade");
+                    if (novaIdade != -1) {
                         animalEncontrado.setIdade(novaIdade);
                         JOptionPane.showMessageDialog(null, "✅ Idade atualizada com sucesso!");
                     }
@@ -692,5 +694,73 @@ public class SistemaVeterinaria {
         }
 
         return texto.trim();
+    }
+
+    /**
+     * Método auxiliar para solicitar idade do animal
+     * Solicita ANOS e MESES separadamente
+     *
+     * @param titulo Título da janela
+     * @return idade em anos (com decimais para meses) ou -1 se cancelado
+     */
+    private static double solicitarIdade(String titulo) {
+        try {
+            // Solicita os anos
+            String anosStr = JOptionPane.showInputDialog(null,
+                    "Digite a idade em ANOS:\n(Digite 0 se o animal tiver menos de 1 ano)",
+                    titulo,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            // Se cancelou, retorna -1
+            if (anosStr == null) {
+                return -1;
+            }
+
+            int anos = Integer.parseInt(anosStr.trim());
+
+            // Valida se anos é positivo
+            if (anos < 0) {
+                JOptionPane.showMessageDialog(null,
+                        "❌ A idade em anos não pode ser negativa!",
+                        "Erro de Validação",
+                        JOptionPane.ERROR_MESSAGE);
+                return -1;
+            }
+
+            // Solicita os meses adicionais
+            String mesesStr = JOptionPane.showInputDialog(null,
+                    "Digite os MESES adicionais (0 a 11):\n(Digite 0 se não houver meses adicionais)",
+                    titulo,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            // Se cancelou, retorna -1
+            if (mesesStr == null) {
+                return -1;
+            }
+
+            int meses = Integer.parseInt(mesesStr.trim());
+
+            // Valida se meses está entre 0 e 11
+            if (meses < 0 || meses > 11) {
+                JOptionPane.showMessageDialog(null,
+                        "❌ Os meses devem estar entre 0 e 11!",
+                        "Erro de Validação",
+                        JOptionPane.ERROR_MESSAGE);
+                return -1;
+            }
+
+            // Calcula a idade total em anos (com decimais)
+            // Exemplo: 2 anos e 5 meses = 2 + (5/12) = 2.4166...
+            double idadeTotal = anos + (meses / 12.0);
+
+            return idadeTotal;
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null,
+                    "❌ Erro: Digite apenas números válidos!",
+                    "Erro de Validação",
+                    JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
     }
 }

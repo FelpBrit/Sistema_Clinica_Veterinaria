@@ -25,9 +25,10 @@ public class Animal {
     private String especie;
 
     /**
-     * Idade do animal em anos
+     * Idade do animal em anos (aceita decimais para representar meses)
+     * Exemplo: 2.5 = 2 anos e 6 meses
      */
-    private int idade;
+    private double idade;
 
     /**
      * Nome do proprietário/dono do animal
@@ -52,12 +53,12 @@ public class Animal {
      *
      * @param nome Nome do animal
      * @param especie Espécie do animal
-     * @param idade Idade do animal em anos
+     * @param idade Idade do animal em anos (aceita decimais)
      * @param nomeDono Nome do proprietário
      * @param telefone Telefone do proprietário
      * @param raca Raça do animal
      */
-    public Animal(String nome, String especie, int idade, String nomeDono, String telefone, String raca) {
+    public Animal(String nome, String especie, double idade, String nomeDono, String telefone, String raca) {
         this.nome = nome;
         this.especie = especie;
         this.idade = idade;
@@ -105,17 +106,17 @@ public class Animal {
 
     /**
      * Retorna a idade do animal
-     * @return idade em anos
+     * @return idade em anos (pode conter decimais)
      */
-    public int getIdade() {
+    public double getIdade() {
         return idade;
     }
 
     /**
      * Define a idade do animal
-     * @param idade nova idade em anos
+     * @param idade nova idade em anos (aceita decimais)
      */
-    public void setIdade(int idade) {
+    public void setIdade(double idade) {
         this.idade = idade;
     }
 
@@ -173,17 +174,61 @@ public class Animal {
 
     /**
      * MÉTODO PERSONALIZADO 1
-     * Calcula a idade aproximada do animal em meses humanos
-     * Conversão simplificada: 1 ano animal = 12 meses
+     * Converte a idade para o total de meses
      *
-     * @return idade em meses
+     * @return idade total em meses
      */
     public int calcularIdadeEmMeses() {
-        return this.idade * 12;
+        return (int) Math.round(this.idade * 12);
+    }
+
+    /**
+     * MÉTODO AUXILIAR
+     * Retorna apenas os anos inteiros (parte inteira da idade)
+     *
+     * @return anos completos
+     */
+    public int getAnos() {
+        return (int) this.idade;
+    }
+
+    /**
+     * MÉTODO AUXILIAR
+     * Retorna apenas os meses adicionais (resto após os anos completos)
+     *
+     * @return meses adicionais (0-11)
+     */
+    public int getMesesAdicionais() {
+        int totalMeses = calcularIdadeEmMeses();
+        int anos = getAnos();
+        return totalMeses - (anos * 12);
     }
 
     /**
      * MÉTODO PERSONALIZADO 2
+     * Retorna a idade formatada de forma legível
+     * Exemplos: "2 ano(s) e 5 mês(es)", "3 mês(es)", "1 ano(s)"
+     *
+     * @return String com idade formatada
+     */
+    public String getIdadeFormatada() {
+        int anos = getAnos();
+        int meses = getMesesAdicionais();
+
+        if (anos == 0) {
+            // Só meses
+            return meses + " mês(es)";
+        } else if (meses == 0) {
+            // Só anos
+            return anos + " ano(s)";
+        } else {
+            // Anos e meses
+            return anos + " ano(s) e " + meses + " mês(es)";
+        }
+    }
+
+    /**
+     * MÉTODO PERSONALIZADO 3
      * Valida se a idade informada é válida (positiva e razoável)
      *
      * @return true se idade válida, false caso contrário
@@ -194,7 +239,7 @@ public class Animal {
     }
 
     /**
-     * MÉTODO PERSONALIZADO 3
+     * MÉTODO PERSONALIZADO 4
      * Gera uma ficha completa formatada do animal com todos os dados
      *
      * @return String com a ficha completa formatada
@@ -205,8 +250,8 @@ public class Animal {
         ficha.append("Nome: ").append(this.nome).append("\n");
         ficha.append("Espécie: ").append(this.especie).append("\n");
         ficha.append("Raça: ").append(this.raca).append("\n");
-        ficha.append("Idade: ").append(this.idade).append(" ano(s)");
-        ficha.append(" (").append(calcularIdadeEmMeses()).append(" meses)\n");
+        ficha.append("Idade: ").append(getIdadeFormatada());
+        ficha.append(" (").append(calcularIdadeEmMeses()).append(" meses no total)\n");
         ficha.append("--- Dados do Proprietário ---\n");
         ficha.append("Nome: ").append(this.nomeDono).append("\n");
         ficha.append("Telefone: ").append(this.telefone).append("\n");
@@ -228,7 +273,7 @@ public class Animal {
         return "Animal: " + nome +
                 " | Espécie: " + especie +
                 " | Raça: " + raca +
-                " | Idade: " + idade + " ano(s)" +
+                " | Idade: " + getIdadeFormatada() +
                 " | Dono: " + nomeDono +
                 " | Tel: " + telefone;
     }

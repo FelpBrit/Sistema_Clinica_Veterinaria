@@ -34,14 +34,14 @@ public class Gato extends Animal {
      *
      * @param nome Nome do gato
      * @param especie Espécie (normalmente "Felina")
-     * @param idade Idade do gato em anos
+     * @param idade Idade do gato em anos (aceita decimais)
      * @param nomeDono Nome do proprietário
      * @param telefone Telefone do proprietário
      * @param raca Raça do gato (Ex: Persa, Siamês, SRD, etc.)
      * @param pelagem Tipo de pelagem (Curta, Longa, Média)
      * @param temperamento Temperamento do gato (Calmo, Ativo, Agressivo, etc.)
      */
-    public Gato(String nome, String especie, int idade, String nomeDono,
+    public Gato(String nome, String especie, double idade, String nomeDono,
                 String telefone, String raca, String pelagem, String temperamento) {
         // Chama o construtor da superclasse Animal usando super()
         // Isso inicializa os atributos herdados (nome, especie, idade, nomeDono, telefone, raca)
@@ -102,17 +102,21 @@ public class Gato extends Animal {
      * @return idade aproximada em anos humanos
      */
     public int calcularIdadeHumana() {
-        int idadeAtual = getIdade(); // Usa o getter herdado da superclasse
+        double idadeAtual = getIdade(); // Usa o getter herdado da superclasse
+        int anos = getAnos(); // Pega apenas os anos completos
 
         if (idadeAtual <= 0) {
             return 0;
-        } else if (idadeAtual == 1) {
-            return 15;
-        } else if (idadeAtual == 2) {
-            return 24; // 15 + 9
+        } else if (anos == 0) {
+            // Menos de 1 ano - proporcional
+            return (int) (15 * idadeAtual);
+        } else if (anos == 1) {
+            return 15 + (int) (9 * (idadeAtual - 1));
+        } else if (anos == 2) {
+            return 24 + (int) (4 * (idadeAtual - 2));
         } else {
-            // 24 (primeiros 2 anos) + 4 anos para cada ano adicional
-            return 24 + ((idadeAtual - 2) * 4);
+            // Mais de 2 anos
+            return 24 + ((anos - 2) * 4) + (int) (4 * (idadeAtual - anos));
         }
     }
 
